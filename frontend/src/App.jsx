@@ -49,7 +49,7 @@ function App() {
 
   return (
     <div className="app-shell">
-      <Routes>
+      <Routes> 
         <Route path="/" element={<LoginPage onLogin={handleLogin} theme={theme} onThemeToggle={toggleTheme} />} />
         <Route path="/register" element={<RegisterPage theme={theme} onThemeToggle={toggleTheme} />} />
         <Route

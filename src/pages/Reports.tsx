@@ -1,5 +1,5 @@
 import React from 'react';
-import { TopBar } from '@/src/components/Layout/TopBar';
+import { TopBar } from '@/web-absensi/src/components/Layout/TopBar';
 import { 
   UserCheck, 
   Smile, 
@@ -21,7 +21,7 @@ import {
   Cell
 } from 'recharts';
 import { motion } from 'motion/react';
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/web-absensi/src/lib/utils';
 
 const data = [
   { name: 'Mon', value: 82 },
