@@ -46,7 +46,7 @@ function RegisterPage({ onLogin, theme, onThemeToggle }) {
       <section className="auth-card">
         <div className="auth-header">
           <div className="auth-header-top">
-            <h1 className="auth-title">Daftar di EduAttend</h1>
+            <h1 className="auth-title">PENDAFTARAN</h1>
             {onThemeToggle && <ThemeToggle theme={theme} onToggle={onThemeToggle} />}
           </div>
           <p className="auth-subtitle">Buat akun untuk mengelola absensi sekolah dengan tampilan dashboard profesional.</p>
