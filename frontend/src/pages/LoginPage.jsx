@@ -54,7 +54,7 @@ function LoginPage({ onLogin, theme, onThemeToggle }) {
             </div>
 
             <div className="input-group">
-              <label htmlFor="password">Kata sandi</label>
+              <label htmlFor="password">Kata Sandi</label>
               <div className="password-wrapper">
                 <input
                   id="password"
@@ -71,7 +71,6 @@ function LoginPage({ onLogin, theme, onThemeToggle }) {
                   type="button"
                   className="password-toggle"
                   onClick={() => setShowPassword(!showPassword)}
-                  title={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
                 >
                   <span className="material-symbols-outlined">
                     {showPassword ? 'visibility_off' : 'visibility'}

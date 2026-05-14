@@ -51,8 +51,11 @@ function RegisterPage({ onLogin, theme, onThemeToggle }) {
           </div>
           <p className="auth-subtitle">Buat akun untuk mengelola absensi sekolah dengan tampilan dashboard profesional.</p>
         </div>
-      
+
         <div className="auth-body">
+          <div className="auth-hero">
+            Pilih peran pengguna, isi data sekolah, dan mulai gunakan sistem absensi yang terintegrasi.
+          </div>
 
           <form className="auth-form" onSubmit={handleSubmit}>
             <div className="input-group">
@@ -80,7 +83,7 @@ function RegisterPage({ onLogin, theme, onThemeToggle }) {
             </div>
 
             <div className="input-group">
-              <label htmlFor="password">Kata sandi</label>
+              <label htmlFor="password">Kata Sandi</label>
               <div className="password-wrapper">
                 <input
                   id="password"
