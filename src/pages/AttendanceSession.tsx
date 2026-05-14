@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TopBar } from '@/web-absensi/src/components/Layout/TopBar';
+import { TopBar } from '../components/Layout/TopBar';
 import { 
   MapPin, 
   Camera, 
@@ -11,7 +11,7 @@ import {
   Clock
 } from 'lucide-react';
 import { motion } from 'motion/react';
-import { cn } from '@/web-absensi/src/lib/utils';
+import { cn } from '../lib/utils';
 
 export function AttendanceSession() {
   const [sessionCode, setSessionCode] = useState('');

@@ -191,6 +191,17 @@ async function getAttendanceRecords() {
   return all('SELECT * FROM attendance_records ORDER BY id DESC LIMIT 50');
 }
 
+async function deleteUser(id) {
+  const user = await get('SELECT * FROM users WHERE id = ?', [id]);
+  if (!user) return null;
+  await run('DELETE FROM users WHERE id = ?', [id]);
+  return user;
+}
+
+async function getAllUsers() {
+  return all('SELECT id, name, email, role FROM users ORDER BY id');
+}
+
 module.exports = {
   db,
   init,
@@ -205,5 +216,7 @@ module.exports = {
   submitAttendance,
   getAttendanceRecords,
   getAttendanceRecordsByStudent,
-  createUser
+  createUser,
+  deleteUser,
+  getAllUsers
 };

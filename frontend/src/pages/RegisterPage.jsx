@@ -20,13 +20,28 @@ function RegisterPage({ theme, onThemeToggle }) {
     setLoading(true);
 
     try {
-      await register({ name, email, password, role });
-      setSuccess('Akun berhasil dibuat. Silakan masuk.');
-      setTimeout(() => {
-        navigate('/');
-      }, 1200);
+      // 1. Kirim data ke backend
+      const response = await register({ name, email, password, role });
+      
+      // 2. LOGIKA BARU: Simpan token (gelang) yang dikirim server ke localStorage
+      if (response && response.token) {
+        localStorage.setItem('userToken', response.token);
+        localStorage.setItem('userData', JSON.stringify(response.user));
+        
+        setSuccess('Registrasi berhasil! Mengalihkan ke dashboard...');
+        
+        // 3. Langsung pindah ke halaman utama/dashboard
+        setTimeout(() => {
+          navigate('/dashboard'); // Ganti '/dashboard' sesuai rute utama Anda
+        }, 1200);
+      } else {
+        // Jika server hanya kirim sukses tanpa login otomatis (opsional)
+        setSuccess('Akun berhasil dibuat. Silakan masuk.');
+        setTimeout(() => navigate('/'), 2000);
+      }
+      
     } catch (err) {
-      setError(err.message);
+      setError(err.message || 'Terjadi kesalahan saat mendaftar');
     } finally {
       setLoading(false);
     }

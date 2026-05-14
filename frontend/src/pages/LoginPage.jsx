@@ -33,10 +33,10 @@ function LoginPage({ onLogin, theme, onThemeToggle }) {
       <section className="auth-card">
         <div className="auth-header">
           <div className="auth-header-top">
-            <h1 className="auth-title">EduAttend</h1>
+            <h1 className="auth-title">ABSENSI</h1>
             {onThemeToggle && <ThemeToggle theme={theme} onToggle={onThemeToggle} />}
           </div>
-          <p className="auth-subtitle">Sistem absensi sekolah cerdas yang dirancang untuk admin, guru, dan siswa.</p>
+          <p className="auth-subtitle">Sistem absensi sekolah yang dirancang untuk mempermudah pengelolaan kehadiran guru dan murid.</p>
         </div>
 
         <div className="auth-body">

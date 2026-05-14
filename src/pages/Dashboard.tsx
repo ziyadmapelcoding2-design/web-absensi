@@ -1,9 +1,9 @@
 import React from 'react';
-import { TopBar } from '@/web-absensi/src/components/Layout/TopBar';
+import { TopBar } from '../components/Layout/TopBar';
 import { MapPin, BarChart3, UserCheck, Hourglass, Clock, CalendarDays } from 'lucide-react';
 import { motion } from 'motion/react';
-import { cn } from '@/web-absensi/src/lib/utils';
-import { ClassSession } from '@/web-absensi/src/types';
+import { cn } from '../lib/utils';
+import { ClassSession } from '../types';
 
 const mockClasses: ClassSession[] = [
   {

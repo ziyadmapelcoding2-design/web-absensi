@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
-const { init, getUserByEmailAndPassword, getUserByEmail, getAdminStats, getTeacherStats, getStudentStats, getClasses, createSession, getSessions, submitAttendance, getAttendanceRecords, getAttendanceRecordsByStudent, createUser } = require('./db');
+const { init, getUserByEmailAndPassword, getUserByEmail, getAdminStats, getTeacherStats, getStudentStats, getClasses, createSession, getSessions, submitAttendance, getAttendanceRecords, getAttendanceRecordsByStudent, createUser, deleteUser, getAllUsers } = require('./db');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 const port = 4000;
@@ -8,6 +9,10 @@ const port = 4000;
 app.use(cors());
 app.use(express.json());
 
+// Kunci rahasia untuk token
+const SECRET_KEY = 'secret_key';
+
+// --- ROUTE LOGIN ---
 app.post('/api/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -15,12 +20,15 @@ app.post('/api/login', async (req, res) => {
     if (!user) {
       return res.status(401).json({ message: 'Email atau password salah' });
     }
-    return res.json({ user: { id: user.id, name: user.name, email: user.email, role: user.role } });
+    // Membuat token
+    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, SECRET_KEY, { expiresIn: '1d' });
+    return res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
 });
 
+// --- ROUTE REGISTER (Sudah Diperbaiki agar langsung kasih Token) ---
 app.post('/api/register', async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
@@ -31,12 +39,24 @@ app.post('/api/register', async (req, res) => {
     if (existingUser) {
       return res.status(409).json({ message: 'Email sudah terdaftar' });
     }
+    
+    // Simpan user ke database
     const user = await createUser(name, email, password, role);
-    return res.status(201).json({ user: { id: user.id, name: user.name, email: user.email, role: user.role } });
+
+    // LANGKAH PENTING: Langsung buat token setelah daftar
+    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, SECRET_KEY, { expiresIn: '1d' });
+
+    // Kirim user DAN token ke frontend
+    return res.status(201).json({ 
+      token, 
+      user: { id: user.id, name: user.name, email: user.email, role: user.role } 
+    });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
 });
+
+// ... (Sisa kode API lainnya tetap sama seperti milik Anda) ...
 
 app.get('/api/dashboard/stats', async (req, res) => {
   try {
@@ -122,6 +142,29 @@ app.get('/api/attendance/records', async (req, res) => {
   }
 });
 
+app.delete('/api/users/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedUser = await deleteUser(id);
+    if (!deletedUser) {
+      return res.status(404).json({ message: 'User tidak ditemukan' });
+    }
+    return res.json({ message: 'User berhasil dihapus', user: deletedUser });
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+});
+
+app.get('/api/users', async (req, res) => {
+  try {
+    const users = await getAllUsers();
+    return res.json({ users });
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+});
+
+// --- FUNGSI START SERVER ---
 async function startServer(portToTry) {
   return new Promise((resolve, reject) => {
     const server = app.listen(portToTry, () => {

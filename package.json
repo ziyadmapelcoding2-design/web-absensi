@@ -11,6 +11,12 @@
     "frontend": "npm --prefix frontend run dev"
   },
   "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
     "concurrently": "^8.2.0"
+  },
+  "dependencies": {
+    "jsonwebtoken": "^9.0.3",
+    "lucide-react": "^1.14.0"
   }
 }

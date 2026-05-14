@@ -9,7 +9,7 @@ import {
   Settings,
   BarChart3
 } from 'lucide-react';
-import { cn } from '@/web-absensi/src/lib/utils';
+import { cn } from '../../lib/utils';
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Teacher Home', path: '/' },
