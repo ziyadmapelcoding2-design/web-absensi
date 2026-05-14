@@ -48,7 +48,7 @@ function LoginPage({ onLogin, theme, onThemeToggle }) {
               <input
                 id="email"
                 type="email"
-                placeholder="nama@sekolah.lokal"
+                placeholder="nama@sekolah.local"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -67,18 +67,9 @@ function LoginPage({ onLogin, theme, onThemeToggle }) {
               />
             </div>
 
-            <div className="demo-credentials">
-              <p>Gunakan akun demo untuk mencoba aplikasi:</p>
-              <ul>
-                <li><strong>Admin</strong>: admin@sekolah.local / admin123</li>
-                <li><strong>Guru</strong>: teacher@sekolah.local / guru123</li>
-                <li><strong>Siswa</strong>: student@sekolah.local / siswa123</li>
-              </ul>
-            </div>
-
             {error && <div className="alert">{error}</div>}
             <button className="btn btn-primary" type="submit" disabled={loading}>
-              {loading ? 'Memproses...' : 'Masuk ke EduAttend'}
+              {loading ? 'Memproses...' : 'MASUK'}
             </button>
           </form>
 
