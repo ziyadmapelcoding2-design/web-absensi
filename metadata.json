@@ -1,0 +1,8 @@
+{
+  "name": "EduAttend Pro",
+  "description": "A professional academic management and attendance tracking system for teachers and students.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": []
+}
