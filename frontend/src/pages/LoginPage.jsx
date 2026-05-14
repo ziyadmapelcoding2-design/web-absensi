@@ -54,41 +54,28 @@ function LoginPage({ onLogin, theme, onThemeToggle }) {
             </div>
 
             <div className="input-group">
-<<<<<<< HEAD
-              <label htmlFor="password">Kata Sandi</label>
-=======
               <label htmlFor="password">Kata sandi</label>
->>>>>>> f1144547a8bf2009eae3141e6a0b6b530d3672e5
               <div className="password-wrapper">
                 <input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   placeholder="••••••••"
                   value={password}
-<<<<<<< HEAD
                   onChange={(e) => {
                     setPassword(e.target.value);
                     if (error) setError('');
                   }}
-=======
-                  onChange={(e) => setPassword(e.target.value)}
->>>>>>> f1144547a8bf2009eae3141e6a0b6b530d3672e5
                   required
                 />
                 <button
                   type="button"
                   className="password-toggle"
                   onClick={() => setShowPassword(!showPassword)}
-<<<<<<< HEAD
+                  title={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
                 >
                   <span className="material-symbols-outlined">
                     {showPassword ? 'visibility_off' : 'visibility'}
                   </span>
-=======
-                  title={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
-                >
-                  <span className="material-symbols-outlined">{showPassword ? 'visibility_off' : 'visibility'}</span>
->>>>>>> f1144547a8bf2009eae3141e6a0b6b530d3672e5
                 </button>
               </div>
             </div>
