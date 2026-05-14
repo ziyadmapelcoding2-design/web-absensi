@@ -40,9 +40,7 @@ function LoginPage({ onLogin, theme, onThemeToggle }) {
         </div>
 
         <div className="auth-body">
-          <div className="auth-hero">
-            Masuk untuk melihat statistik real-time, buat sesi absensi, dan catat kehadiran dengan cepat.
-          </div>
+          {/* Bagian auth-hero telah dihapus dari sini */}
 
           <form className="auth-form" onSubmit={handleSubmit}>
             <div className="input-group">
@@ -50,7 +48,7 @@ function LoginPage({ onLogin, theme, onThemeToggle }) {
               <input
                 id="email"
                 type="email"
-                placeholder="name@school.local"
+                placeholder="nama@sekolah.lokal"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
