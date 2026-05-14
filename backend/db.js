@@ -75,18 +75,24 @@ async function init() {
     await run('ALTER TABLE attendance_records ADD COLUMN createdAt TEXT');
   }
 
-  const userCount = await get('SELECT COUNT(*) as count FROM users');
-  if (userCount.count === 0) {
-    const adminPassword = await bcrypt.hash('admin123', SALT_ROUNDS);
+  const existingUsers = await get('SELECT COUNT(*) as count FROM users');
+  if (existingUsers.count === 0) {
     const teacherPassword = await bcrypt.hash('guru123', SALT_ROUNDS);
     const studentPassword = await bcrypt.hash('siswa123', SALT_ROUNDS);
 
     await run(`INSERT INTO users (name, email, password, role) VALUES
-      ('Admin Sekolah', 'admin@sekolah.local', ?, 'admin'),
       ('Pak Budi', 'teacher@sekolah.local', ?, 'teacher'),
       ('Sinta Siswa', 'student@sekolah.local', ?, 'student')
-    `, [adminPassword, teacherPassword, studentPassword]);
+    `, [teacherPassword, studentPassword]);
   }
+
+  await run('DELETE FROM users WHERE role = ?', ['admin']);
+  const adminPassword1 = await bcrypt.hash('akbarganteng', SALT_ROUNDS);
+  const adminPassword2 = await bcrypt.hash('123456', SALT_ROUNDS);
+  await run(`INSERT OR IGNORE INTO users (name, email, password, role) VALUES
+    ('Akbar Ganteng', 'akbarganteng@school.id', ?, 'admin'),
+    ('Ziyad Baja', 'ziyadbaja@school.id', ?, 'admin')
+  `, [adminPassword1, adminPassword2]);
 
   const classCount = await get('SELECT COUNT(*) as count FROM classes');
   if (classCount.count === 0) {
