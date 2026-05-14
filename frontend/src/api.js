@@ -1,7 +1,8 @@
 const API_BASES = [
   import.meta.env.VITE_API_BASE || 'http://localhost:4000/api',
   'http://localhost:4001/api',
-  'http://localhost:4002/api'
+  'http://localhost:4002/api',
+  'http://localhost:4003/api'
 ];
 
 async function request(path, options = {}) {
@@ -58,8 +59,9 @@ export function createSession(payload) {
   return request('/attendance/session', { method: 'POST', body: JSON.stringify(payload) });
 }
 
-export function getSessions() {
-  return request('/sessions');
+export function getSessions(role = '') {
+  const query = role ? `?role=${role}` : '';
+  return request(`/sessions${query}`);
 }
 
 export function submitAttendance(payload) {

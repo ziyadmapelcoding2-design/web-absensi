@@ -14,7 +14,7 @@ function StudentPage({ user, onLogout, theme, onThemeToggle }) {
     async function loadData() {
       const dashboard = await getDashboardStats('student', user.name);
       setStats(dashboard);
-      const sessionResult = await getSessions();
+      const sessionResult = await getSessions('student');
       setSessions(sessionResult.sessions);
       if (sessionResult.sessions.length > 0) {
         setSelectedSession(sessionResult.sessions[0].id.toString());
@@ -23,11 +23,33 @@ function StudentPage({ user, onLogout, theme, onThemeToggle }) {
       setRecords(recordResult.records);
     }
     loadData();
+
+    // Auto-refresh sessions every 30 seconds to show newly created sessions
+    const interval = setInterval(async () => {
+      try {
+        const sessionResult = await getSessions('student');
+        setSessions(sessionResult.sessions);
+        if (sessionResult.sessions.length > 0 && !sessionResult.sessions.find(s => s.id.toString() === selectedSession)) {
+          setSelectedSession(sessionResult.sessions[0].id.toString());
+        }
+      } catch (err) {
+        console.error('Failed to refresh sessions:', err);
+      }
+    }, 30000);
+
+    return () => clearInterval(interval);
   }, [user.name]);
+
 
   async function handleSubmit(event) {
     event.preventDefault();
     setMessage('');
+
+    if (sessions.length === 0) {
+      setMessage('Tidak ada sesi absensi tersedia saat ini.');
+      return;
+    }
+
     try {
       await submitAttendance({
         sessionId: selectedSession,
@@ -91,7 +113,9 @@ function StudentPage({ user, onLogout, theme, onThemeToggle }) {
                   <option value="sick">Sakit</option>
                 </select>
               </div>
-              <button className="btn btn-primary" type="submit" disabled={sessions.length === 0}>Kirim Absensi</button>
+              <button className="btn btn-primary" type="submit" disabled={sessions.length === 0}>
+                {sessions.length === 0 ? 'Tidak ada sesi tersedia' : 'Kirim Absensi'}
+              </button>
             </form>
             {message && <div className="alert">{message}</div>}
           </div>

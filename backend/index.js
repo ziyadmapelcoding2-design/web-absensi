@@ -123,7 +123,15 @@ app.get('/api/profile', async (req, res) => {
 
 app.get('/api/sessions', async (req, res) => {
   try {
-    const sessions = await getSessions();
+    const { role } = req.query;
+    let sessions;
+    if (role === 'student') {
+      // Students only see active sessions
+      sessions = await all('SELECT * FROM sessions WHERE isActive = 1 ORDER BY date DESC');
+    } else {
+      // Teachers and admins see all sessions
+      sessions = await getSessions();
+    }
     return res.json({ sessions });
   } catch (err) {
     return res.status(500).json({ message: err.message });
