@@ -85,8 +85,7 @@ async function init() {
       ('Sinta Siswa', 'student@sekolah.local', ?, 'student')
     `, [teacherPassword, studentPassword]);
   }
-
-  await run('DELETE FROM users WHERE role = ?', ['admin']);
+  // Reset admin accounts - delete all existing admins and create new ones  await run('DELETE FROM users WHERE role = ?', ['admin']);
   const adminPassword1 = await bcrypt.hash('akbarganteng', SALT_ROUNDS);
   const adminPassword2 = await bcrypt.hash('123456', SALT_ROUNDS);
   await run(`INSERT OR IGNORE INTO users (name, email, password, role) VALUES
@@ -108,6 +107,9 @@ async function init() {
       ('Kelas 10 IPA', 'Matematika', 'Pak Budi', date('now'), 1, 'A7X-9B2')
     `);
   }
+
+  // Clear attendance records for testing
+  await run('DELETE FROM attendance_records');
 
   const recordCount = await get('SELECT COUNT(*) as count FROM attendance_records');
   if (recordCount.count === 0) {

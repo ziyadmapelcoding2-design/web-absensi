@@ -1,7 +1,8 @@
 const API_BASES = [
   import.meta.env.VITE_API_BASE || 'http://localhost:4000/api',
   'http://localhost:4001/api',
-  'http://localhost:4002/api'
+  'http://localhost:4002/api',
+  'http://localhost:4003/api'
 ];
 
 async function request(path, options = {}) {
