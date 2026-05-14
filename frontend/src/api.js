@@ -37,8 +37,17 @@ export function register(credentials) {
   return request('/register', { method: 'POST', body: JSON.stringify(credentials) });
 }
 
-export function getDashboardStats(role) {
-  return request(`/dashboard/stats?role=${role}`);
+export function getDashboardStats(role, studentName = '') {
+  const query = studentName ? `&studentName=${encodeURIComponent(studentName)}` : '';
+  return request(`/dashboard/stats?role=${role}${query}`);
+}
+
+export function getUsers() {
+  return request('/users');
+}
+
+export function deleteUser(id) {
+  return request(`/users/${id}`, { method: 'DELETE' });
 }
 
 export function getClasses() {

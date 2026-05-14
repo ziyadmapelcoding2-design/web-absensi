@@ -1,27 +1,45 @@
 import { useEffect, useState } from 'react';
-import { getDashboardStats, getClasses } from '../api.js';
+import { deleteUser, getClasses, getDashboardStats, getUsers } from '../api.js';
 import DashboardShell from '../components/DashboardShell.jsx';
 
 function AdminPage({ user, onLogout, theme, onThemeToggle }) {
   const [stats, setStats] = useState({});
   const [classes, setClasses] = useState([]);
+  const [users, setUsers] = useState([]);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function loadData() {
+      setLoading(true);
       try {
         const result = await getDashboardStats('admin');
         setStats(result);
         const classResult = await getClasses();
         setClasses(classResult.classes);
+        const usersResult = await getUsers();
+        setUsers(usersResult.users);
       } catch (err) {
         setError(err.message);
+      } finally {
+        setLoading(false);
       }
     }
     loadData();
   }, []);
 
-  const totalAttendance = (stats.attendanceByStatus || []).reduce((sum, item) => sum + item.count, 0);
+  async function handleDeleteUser(id) {
+    const userToDelete = users.find((item) => item.id === id);
+    if (!userToDelete) return;
+    if (!window.confirm(`Hapus pengguna ${userToDelete.name}?`)) return;
+    try {
+      await deleteUser(id);
+      setUsers((prev) => prev.filter((item) => item.id !== id));
+      setStats((prev) => ({ ...prev, totalUsers: prev.totalUsers - 1 }));
+    } catch (err) {
+      setError(err.message);
+    }
+  }
 
   return (
     <DashboardShell
@@ -33,6 +51,7 @@ function AdminPage({ user, onLogout, theme, onThemeToggle }) {
       action={<button className="btn btn-secondary" onClick={onLogout}>Keluar</button>}
     >
       {error && <div className="alert">{error}</div>}
+      {loading && <div className="alert success">Memuat data dashboard...</div>}
 
       <div className="stats-grid">
         <div className="metric-card">
@@ -51,9 +70,12 @@ function AdminPage({ user, onLogout, theme, onThemeToggle }) {
 
       <section className="page-section">
         <div className="section-title">
-          <h2>Anggota Tim</h2>
-          <p className="section-note">Distribusi peran pengguna dalam sistem.</p>
+          <div>
+            <h2>Ringkasan Anggota</h2>
+            <p className="section-note">Lihat sebaran pengguna dalam setiap peran dan kualitas data absensi.</p>
+          </div>
         </div>
+
         <div className="panel user-role-grid">
           {(stats.usersByRole || []).map((item) => (
             <div key={item.role} className="role-card">
@@ -64,6 +86,44 @@ function AdminPage({ user, onLogout, theme, onThemeToggle }) {
           {(!stats.usersByRole || stats.usersByRole.length === 0) && (
             <p className="muted-note">Tidak ada data peran pengguna.</p>
           )}
+        </div>
+      </section>
+
+      <section className="page-section">
+        <div className="section-title">
+          <div>
+            <h2>Data Pengguna</h2>
+            <p className="section-note">Kelola daftar pengguna dan hapus akun yang tidak diperlukan.</p>
+          </div>
+        </div>
+        <div className="panel table-card">
+          <table>
+            <thead>
+              <tr>
+                <th>Nama</th>
+                <th>Email</th>
+                <th>Peran</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.length === 0 && (
+                <tr><td colSpan="4">Belum ada pengguna terdaftar</td></tr>
+              )}
+              {users.map((item) => (
+                <tr key={item.id}>
+                  <td>{item.name}</td>
+                  <td>{item.email}</td>
+                  <td>{item.role}</td>
+                  <td>
+                    <button className="btn btn-secondary btn-small" onClick={() => handleDeleteUser(item.id)}>
+                      Hapus
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </section>
 

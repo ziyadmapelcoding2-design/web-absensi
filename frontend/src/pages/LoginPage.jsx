@@ -6,6 +6,7 @@ import ThemeToggle from '../components/ThemeToggle.jsx';
 function LoginPage({ onLogin, theme, onThemeToggle }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -17,10 +18,7 @@ function LoginPage({ onLogin, theme, onThemeToggle }) {
 
     try {
       const response = await login({ email, password });
-      onLogin(response.user);
-      if (response.user.role === 'admin') navigate('/admin');
-      if (response.user.role === 'teacher') navigate('/teacher');
-      if (response.user.role === 'student') navigate('/student');
+      onLogin(response.user, response.token);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -57,14 +55,24 @@ function LoginPage({ onLogin, theme, onThemeToggle }) {
 
             <div className="input-group">
               <label htmlFor="password">Kata sandi</label>
-              <input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
+              <div className="password-wrapper">
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowPassword(!showPassword)}
+                  title={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
+                >
+                  <span className="material-symbols-outlined">{showPassword ? 'visibility_off' : 'visibility'}</span>
+                </button>
+              </div>
             </div>
 
             {error && <div className="alert">{error}</div>}

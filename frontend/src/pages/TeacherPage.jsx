@@ -9,17 +9,25 @@ function TeacherPage({ user, onLogout, theme, onThemeToggle }) {
   const [className, setClassName] = useState('');
   const [subject, setSubject] = useState('Matematika');
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function loadData() {
-      const dashboard = await getDashboardStats('teacher');
-      setStats(dashboard);
-      const sessionResult = await getSessions();
-      setSessions(sessionResult.sessions);
-      const classesResult = await getClasses();
-      setClasses(classesResult.classes);
-      if (classesResult.classes.length > 0) {
-        setClassName(classesResult.classes[0].name);
+      setLoading(true);
+      try {
+        const dashboard = await getDashboardStats('teacher');
+        setStats(dashboard);
+        const sessionResult = await getSessions();
+        setSessions(sessionResult.sessions);
+        const classesResult = await getClasses();
+        setClasses(classesResult.classes);
+        if (classesResult.classes.length > 0) {
+          setClassName(classesResult.classes[0].name);
+        }
+      } catch (err) {
+        setMessage(err.message);
+      } finally {
+        setLoading(false);
       }
     }
     loadData();
@@ -48,6 +56,9 @@ function TeacherPage({ user, onLogout, theme, onThemeToggle }) {
       onThemeToggle={onThemeToggle}
       action={<button className="btn btn-secondary" onClick={onLogout}>Keluar</button>}
     >
+      {loading && <div className="alert success">Memuat data guru...</div>}
+      {message && <div className="alert">{message}</div>}
+
       <div className="stats-grid">
         <div className="metric-card">
           <span>Sesi Aktif</span>
@@ -65,8 +76,10 @@ function TeacherPage({ user, onLogout, theme, onThemeToggle }) {
 
       <section className="page-section">
         <div className="section-title">
-          <h2>Buat Sesi Absensi</h2>
-          <p className="section-note">Tambahkan sesi mudah untuk kelas dan mata pelajaran yang Anda ajarkan.</p>
+          <div>
+            <h2>Buat Sesi Absensi</h2>
+            <p className="section-note">Tambahkan sesi mudah untuk kelas dan mata pelajaran yang Anda ajarkan.</p>
+          </div>
         </div>
         <div className="panel-grid">
           <div className="panel">
@@ -89,7 +102,6 @@ function TeacherPage({ user, onLogout, theme, onThemeToggle }) {
               </div>
               <button className="btn btn-primary" type="submit">Buat Sesi</button>
             </form>
-            {message && <div className="alert">{message}</div>}
           </div>
 
           <div className="panel highlight-panel">

@@ -3,10 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { register } from '../api.js';
 import ThemeToggle from '../components/ThemeToggle.jsx';
 
-function RegisterPage({ theme, onThemeToggle }) {
+function RegisterPage({ onLogin, theme, onThemeToggle }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState('student');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -20,26 +21,19 @@ function RegisterPage({ theme, onThemeToggle }) {
     setLoading(true);
 
     try {
-      // 1. Kirim data ke backend
       const response = await register({ name, email, password, role });
-      
-      // 2. LOGIKA BARU: Simpan token (gelang) yang dikirim server ke localStorage
       if (response && response.token) {
-        localStorage.setItem('userToken', response.token);
-        localStorage.setItem('userData', JSON.stringify(response.user));
-        
+        if (onLogin) {
+          onLogin(response.user, response.token);
+        }
         setSuccess('Registrasi berhasil! Mengalihkan ke dashboard...');
-        
-        // 3. Langsung pindah ke halaman utama/dashboard
         setTimeout(() => {
-          navigate('/dashboard'); // Ganti '/dashboard' sesuai rute utama Anda
-        }, 1200);
+          navigate(`/${response.user.role}`);
+        }, 500);
       } else {
-        // Jika server hanya kirim sukses tanpa login otomatis (opsional)
         setSuccess('Akun berhasil dibuat. Silakan masuk.');
-        setTimeout(() => navigate('/'), 2000);
+        setTimeout(() => navigate('/'), 1200);
       }
-      
     } catch (err) {
       setError(err.message || 'Terjadi kesalahan saat mendaftar');
     } finally {
@@ -90,14 +84,24 @@ function RegisterPage({ theme, onThemeToggle }) {
 
             <div className="input-group">
               <label htmlFor="password">Kata sandi</label>
-              <input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
+              <div className="password-wrapper">
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowPassword(!showPassword)}
+                  title={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
+                >
+                  <span className="material-symbols-outlined">{showPassword ? 'visibility_off' : 'visibility'}</span>
+                </button>
+              </div>
             </div>
 
             <div className="input-group">
