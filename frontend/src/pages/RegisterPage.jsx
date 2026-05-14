@@ -14,6 +14,19 @@ function RegisterPage({ onLogin, theme, onThemeToggle }) {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // State khusus untuk Accordion Peran
+  const [isOpen, setIsOpen] = useState(false);
+  const roles = [
+    { id: 'admin', label: 'Admin' },
+    { id: 'teacher', label: 'Guru' },
+    { id: 'student', label: 'Siswa' }
+  ];
+
+  const getCurrentLabel = () => {
+    const found = roles.find(r => r.id === role);
+    return found ? found.label : 'Pilih Peran';
+  };
+
   async function handleSubmit(event) {
     event.preventDefault();
     setError('');
@@ -23,13 +36,9 @@ function RegisterPage({ onLogin, theme, onThemeToggle }) {
     try {
       const response = await register({ name, email, password, role });
       if (response && response.token) {
-        if (onLogin) {
-          onLogin(response.user, response.token);
-        }
-        setSuccess('Registrasi berhasil! Mengalihkan ke dashboard...');
-        setTimeout(() => {
-          navigate(`/${response.user.role}`);
-        }, 500);
+        if (onLogin) onLogin(response.user, response.token);
+        setSuccess('Registrasi berhasil! Mengalihkan...');
+        setTimeout(() => navigate(`/${response.user.role}`), 500);
       } else {
         setSuccess('Akun berhasil dibuat. Silakan masuk.');
         setTimeout(() => navigate('/'), 1200);
@@ -49,17 +58,13 @@ function RegisterPage({ onLogin, theme, onThemeToggle }) {
             <h1 className="auth-title">PENDAFTARAN</h1>
             {onThemeToggle && <ThemeToggle theme={theme} onToggle={onThemeToggle} />}
           </div>
-          <p className="auth-subtitle">Buat akun untuk mengelola absensi sekolah dengan tampilan dashboard profesional.</p>
+          <p className="auth-subtitle">Buat akun terlebih dahulu sebelum memasuki sistem absensi sekolah.</p>
         </div>
 
         <div className="auth-body">
-          <div className="auth-hero">
-            Pilih peran pengguna, isi data sekolah, dan mulai gunakan sistem absensi yang terintegrasi.
-          </div>
-
           <form className="auth-form" onSubmit={handleSubmit}>
             <div className="input-group">
-              <label htmlFor="name">Nama lengkap</label>
+              <label htmlFor="name">Nama Lengkap</label>
               <input
                 id="name"
                 type="text"
@@ -97,20 +102,44 @@ function RegisterPage({ onLogin, theme, onThemeToggle }) {
                   type="button"
                   className="password-toggle"
                   onClick={() => setShowPassword(!showPassword)}
-                  title={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
                 >
                   <span className="material-symbols-outlined">{showPassword ? 'visibility_off' : 'visibility'}</span>
                 </button>
               </div>
             </div>
 
+            {/* Peran Pengguna dengan tampilan kotak identik */}
             <div className="input-group">
-              <label htmlFor="role">Peran pengguna</label>
-              <select id="role" value={role} onChange={(e) => setRole(e.target.value)}>
-                <option value="admin">Admin</option>
-                <option value="teacher">Guru</option>
-                <option value="student">Siswa</option>
-              </select>
+              <label>Peran Pengguna</label>
+              <div className="accordion-role">
+                <button
+                  type="button"
+                  className="role-trigger"
+                  onClick={() => setIsOpen(!isOpen)}
+                >
+                  <span>{getCurrentLabel()}</span>
+                  <span className={`material-symbols-outlined transition-transform ${isOpen ? 'rotate-180' : ''}`}>
+                    expand_more
+                  </span>
+                </button>
+
+                {isOpen && (
+                  <div className="role-dropdown">
+                    {roles.map((r) => (
+                      <div
+                        key={r.id}
+                        className={`role-option ${role === r.id ? 'selected' : ''}`}
+                        onClick={() => { 
+                          setRole(r.id); 
+                          setIsOpen(false); 
+                        }}
+                      >
+                        {r.label}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
 
             {error && <div className="alert">{error}</div>}
@@ -127,6 +156,14 @@ function RegisterPage({ onLogin, theme, onThemeToggle }) {
           </div>
         </div>
       </section>
+      
+      {/* Overlay transparan untuk menutup accordion saat klik di luar */}
+      {isOpen && (
+        <div 
+          style={{ position: 'fixed', inset: 0, zIndex: 5 }} 
+          onClick={() => setIsOpen(false)}
+        ></div>
+      )}
     </main>
   );
 }
