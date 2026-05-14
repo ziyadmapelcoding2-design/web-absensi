@@ -83,7 +83,11 @@ function RegisterPage({ onLogin, theme, onThemeToggle }) {
             </div>
 
             <div className="input-group">
+<<<<<<< HEAD
               <label htmlFor="password">Kata Sandi</label>
+=======
+              <label htmlFor="password">Kata sandi</label>
+>>>>>>> f1144547a8bf2009eae3141e6a0b6b530d3672e5
               <div className="password-wrapper">
                 <input
                   id="password"
