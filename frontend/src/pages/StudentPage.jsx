@@ -3,9 +3,10 @@ import { getDashboardStats, getRecords, getSessions, submitAttendance } from '..
 import DashboardShell from '../components/DashboardShell.jsx';
 
 function StudentPage({ user, onLogout, theme, onThemeToggle }) {
+  const [stats, setStats] = useState({});
   const [sessions, setSessions] = useState([]);
   const [records, setRecords] = useState([]);
-  const [selectedSession, setSelectedSession] = useState('1');
+  const [selectedSession, setSelectedSession] = useState('');
   const [status, setStatus] = useState('present');
   const [message, setMessage] = useState('');
 
@@ -35,8 +36,8 @@ function StudentPage({ user, onLogout, theme, onThemeToggle }) {
         status
       });
       setMessage('Absensi berhasil dikirim.');
-      const recordResult = await getRecords();
-      setRecords(recordResult.records.filter((record) => record.studentName === user.name));
+      const recordResult = await getRecords(user.name);
+      setRecords(recordResult.records);
     } catch (err) {
       setMessage(err.message);
     }
@@ -71,22 +72,26 @@ function StudentPage({ user, onLogout, theme, onThemeToggle }) {
             <form className="auth-form" onSubmit={handleSubmit}>
               <div className="input-group">
                 <label>Pilih Sesi</label>
-                <select value={selectedSession} onChange={(e) => setSelectedSession(e.target.value)}>
-                  {sessions.map((session) => (
-                    <option key={session.id} value={session.id}>{`${session.className} - ${session.subject}`}</option>
-                  ))}
+                <select value={selectedSession} onChange={(e) => setSelectedSession(e.target.value)} disabled={sessions.length === 0}>
+                  {sessions.length === 0 ? (
+                    <option value="">Tidak ada sesi tersedia</option>
+                  ) : (
+                    sessions.map((session) => (
+                      <option key={session.id} value={session.id}>{`${session.className} - ${session.subject}`}</option>
+                    ))
+                  )}
                 </select>
               </div>
               <div className="input-group">
                 <label>Status Kehadiran</label>
-                <select value={status} onChange={(e) => setStatus(e.target.value)}>
+                <select value={status} onChange={(e) => setStatus(e.target.value)} disabled={sessions.length === 0}>
                   <option value="present">Hadir</option>
                   <option value="late">Telat</option>
                   <option value="absent">Tidak Hadir</option>
                   <option value="sick">Sakit</option>
                 </select>
               </div>
-              <button className="btn btn-primary" type="submit">Kirim Absensi</button>
+              <button className="btn btn-primary" type="submit" disabled={sessions.length === 0}>Kirim Absensi</button>
             </form>
             {message && <div className="alert">{message}</div>}
           </div>
