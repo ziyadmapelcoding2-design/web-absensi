@@ -17,7 +17,7 @@ function TeacherPage({ user, onLogout, theme, onThemeToggle }) {
       try {
         const dashboard = await getDashboardStats('teacher');
         setStats(dashboard);
-        const sessionResult = await getSessions();
+        const sessionResult = await getSessions('teacher');
         setSessions(sessionResult.sessions);
         const classesResult = await getClasses();
         setClasses(classesResult.classes);

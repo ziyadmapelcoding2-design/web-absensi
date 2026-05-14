@@ -58,8 +58,9 @@ export function createSession(payload) {
   return request('/attendance/session', { method: 'POST', body: JSON.stringify(payload) });
 }
 
-export function getSessions() {
-  return request('/sessions');
+export function getSessions(role = '') {
+  const query = role ? `?role=${role}` : '';
+  return request(`/sessions${query}`);
 }
 
 export function submitAttendance(payload) {
