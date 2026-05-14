@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getRecords, getSessions, submitAttendance } from '../api.js';
+import { getDashboardStats, getRecords, getSessions, submitAttendance } from '../api.js';
 import DashboardShell from '../components/DashboardShell.jsx';
 
 function StudentPage({ user, onLogout, theme, onThemeToggle }) {
@@ -11,13 +11,15 @@ function StudentPage({ user, onLogout, theme, onThemeToggle }) {
 
   useEffect(() => {
     async function loadData() {
+      const dashboard = await getDashboardStats('student', user.name);
+      setStats(dashboard);
       const sessionResult = await getSessions();
       setSessions(sessionResult.sessions);
       if (sessionResult.sessions.length > 0) {
         setSelectedSession(sessionResult.sessions[0].id.toString());
       }
-      const recordResult = await getRecords();
-      setRecords(recordResult.records.filter((record) => record.studentName === user.name));
+      const recordResult = await getRecords(user.name);
+      setRecords(recordResult.records);
     }
     loadData();
   }, [user.name]);

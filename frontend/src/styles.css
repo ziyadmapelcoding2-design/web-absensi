@@ -15,6 +15,20 @@
   --radius-sm: 16px;
 }
 
+body.dark-theme {
+  color-scheme: dark;
+  --bg: #0f172a;
+  --surface: rgba(15, 23, 42, 0.95);
+  --surface-soft: #111827;
+  --surface-muted: #1f2937;
+  --primary: #818cf8;
+  --primary-soft: rgba(99, 102, 241, 0.18);
+  --secondary: #e2e8f0;
+  --muted: #94a3b8;
+  --border: rgba(148, 163, 184, 0.24);
+  --shadow: 0 28px 90px rgba(15, 23, 42, 0.5);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -26,9 +40,11 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  background: radial-gradient(circle at top, rgba(79, 70, 229, 0.12), transparent 28%),
+  background: radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.15), transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(79, 70, 229, 0.1), transparent 50%),
     linear-gradient(180deg, var(--bg) 0%, #f8fafc 100%);
   color: var(--secondary);
+  transition: background 0.3s ease;
 }
 
 button,
@@ -59,6 +75,18 @@ img {
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   backdrop-filter: blur(10px);
+  animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .page-header {
@@ -161,11 +189,50 @@ img {
   border-radius: 34px;
   box-shadow: var(--shadow);
   overflow: hidden;
+  animation: fadeInScale 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 .auth-header {
   padding: 38px 34px 24px;
-  background: linear-gradient(135deg, rgba(79, 70, 229, 0.18), rgba(96, 165, 250, 0.1));
+  background: linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #818cf8 100%);
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1), transparent 50%);
+  pointer-events: none;
+}
+
+.auth-header-top {
+  position: relative;
+  z-index: 1;
+}
+
+.auth-header h1 {
+  color: #ffffff;
+}
+
+.auth-header p {
+  color: rgba(255,255,255,0.9);
 }
 
 .auth-header-top {
@@ -179,6 +246,8 @@ img {
   margin: 0;
   font-size: clamp(2rem, 2.4vw, 2.6rem);
   line-height: 1.05;
+  font-weight: 900;
+  letter-spacing: -0.02em;
 }
 
 .auth-subtitle {
@@ -217,20 +286,58 @@ img {
   color: var(--secondary);
 }
 
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  padding-right: 48px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.password-toggle:hover {
+  color: var(--primary);
+  transform: scale(1.1);
+}
+
+.password-toggle .material-symbols-outlined {
+  font-size: 20px;
+}
+
 input,
 select {
   width: 100%;
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
   border-radius: 16px;
   padding: 16px 18px;
   background: #f8f9ff;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
 input:focus,
 select:focus {
-  border-color: rgba(79, 70, 229, 0.4);
-  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 6px rgba(79, 70, 229, 0.12);
+  background: #ffffff;
+}
+
+input::placeholder {
+  opacity: 0.7;
 }
 
 .btn {
@@ -250,9 +357,31 @@ select:focus {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #4338ca, #6366f1);
+  background: linear-gradient(135deg, #4f46e5, #6366f1, #818cf8);
   color: #ffffff;
-  box-shadow: 0 18px 40px rgba(99, 102, 241, 0.18);
+  box-shadow: 0 18px 40px rgba(99, 102, 241, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-primary:hover::before {
+  left: 100%;
+}
+
+.btn-primary:active {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 48px rgba(99, 102, 241, 0.3);
 }
 
 .btn-secondary,
@@ -355,14 +484,152 @@ table td {
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  gap: 16px;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  border: 2px solid var(--border);
+  background: var(--surface);
+  color: var(--secondary);
+  padding: 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.05) translateY(-2px);
+  border-color: var(--primary);
+  box-shadow: 0 8px 16px rgba(79, 70, 229, 0.15);
+}
+
+.theme-icon {
+  font-size: 20px;
+  transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.theme-toggle:active .theme-icon {
+  transform: rotate(180deg);
+}
+
+.page-section {
+  margin-top: 32px;
+}
+
+.user-role-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 18px;
+}
+
+.role-card {
+  padding: 22px;
+  background: var(--surface-soft);
+  border-radius: 22px;
+  border: 1px solid var(--border);
+}
+
+.role-card p {
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.role-card strong {
+  font-size: 2.2rem;
+}
+
+.btn-small {
+  padding: 10px 14px;
+  font-size: 0.9rem;
+}
+
+.table-card table {
+  min-width: 100%;
+}
+
+.table-card table th,
+.table-card table td {
+  padding: 18px 20px;
+}
+
+.table-card tbody tr {
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+body.dark-theme {
+  background: radial-gradient(circle at top, rgba(99, 102, 241, 0.16), transparent 28%),
+    linear-gradient(180deg, var(--bg) 0%, #020617 100%);
+}
+
+body.dark-theme .page-card,
+body.dark-theme .auth-card,
+body.dark-theme .panel,
+body.dark-theme .theme-toggle,
+body.dark-theme .input-group input,
+body.dark-theme .input-group select {
+  background: var(--surface);
+  color: var(--secondary);
+}
+
+body.dark-theme .page-header p,
+body.dark-theme .muted-note,
+body.dark-theme table th,
+body.dark-theme table td,
+body.dark-theme .section-note {
+  color: #cbd5e1;
+}
+
+body.dark-theme .alert {
+  background: #0f172a;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+body.dark-theme .btn-secondary {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(148,163,184,0.28);
+  color: #e2e8f0;
+}
+
+body.dark-theme .btn-primary {
+  box-shadow: 0 18px 40px rgba(99, 102, 241, 0.12);
 }
 
 .metric-card {
-  background: linear-gradient(180deg, #ffffff 0%, #f8f9ff 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
   padding: 24px;
   border-radius: 24px;
-  border: 1px solid rgba(148, 163, 184, 0.16);
+  border: 2px solid rgba(148, 163, 184, 0.16);
   box-shadow: 0 18px 45px rgba(15, 23, 42, 0.05);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(79, 70, 229, 0.6), transparent);
+}
+
+.metric-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(79, 70, 229, 0.3);
+  box-shadow: 0 24px 60px rgba(79, 70, 229, 0.15);
 }
 
 .metric-card span {
@@ -472,4 +739,32 @@ table td {
     flex-direction: column;
     align-items: stretch;
   }
+}
+/* Styling khusus untuk kotak pesan error saja */
+.alert.alert-login-error {
+  background-color: #fee2e2; /* Latar belakang merah muda (Rose 100) */
+  border: 1px solid #fecaca; /* Garis tepi merah tipis */
+  color: #b91c1c;            /* Warna teks merah tegas */
+  padding: 16px;
+  border-radius: 18px;       /* Radius mengikuti gaya desain Anda */
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-top: 4px;
+}
+
+/* Perbaikan kontras maksimal untuk Dark Mode */
+body.dark-theme .alert.alert-login-error {
+  /* Teks dibuat sangat terang (hampir putih kemerahan) agar kontras tinggi */
+  color: #ffe4e6; 
+  
+  /* Latar belakang merah yang lebih pekat namun transparan */
+  background-color: rgba(239, 68, 68, 0.2); 
+  
+  /* Border lebih menyala untuk mempertegas kotak */
+  border: 1px solid rgba(248, 113, 113, 0.5);
+  
+  /* Tambahkan sedikit glow (drop shadow) agar teks lebih "pop" */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.1);
 }

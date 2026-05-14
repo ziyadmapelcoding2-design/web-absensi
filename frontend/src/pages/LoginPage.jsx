@@ -6,9 +6,9 @@ import ThemeToggle from '../components/ThemeToggle.jsx';
 function LoginPage({ onLogin, theme, onThemeToggle }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -17,12 +17,9 @@ function LoginPage({ onLogin, theme, onThemeToggle }) {
 
     try {
       const response = await login({ email, password });
-      onLogin(response.user);
-      if (response.user.role === 'admin') navigate('/admin');
-      if (response.user.role === 'teacher') navigate('/teacher');
-      if (response.user.role === 'student') navigate('/student');
+      onLogin(response.user, response.token);
     } catch (err) {
-      setError(err.message);
+      setError(err.message || 'Email atau password salah');
     } finally {
       setLoading(false);
     }
@@ -40,34 +37,51 @@ function LoginPage({ onLogin, theme, onThemeToggle }) {
         </div>
 
         <div className="auth-body">
-          {/* Bagian auth-hero telah dihapus dari sini */}
-
           <form className="auth-form" onSubmit={handleSubmit}>
             <div className="input-group">
-              <label htmlFor="email">Email sekolah</label>
+              <label htmlFor="email">Email Sekolah</label>
               <input
                 id="email"
                 type="email"
                 placeholder="nama@sekolah.local"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (error) setError('');
+                }}
                 required
               />
             </div>
 
             <div className="input-group">
-              <label htmlFor="password">Kata sandi</label>
-              <input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
+              <label htmlFor="password">Kata Sandi</label>
+              <div className="password-wrapper">
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (error) setError('');
+                  }}
+                  required
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  <span className="material-symbols-outlined">
+                    {showPassword ? 'visibility_off' : 'visibility'}
+                  </span>
+                </button>
+              </div>
             </div>
 
-            {error && <div className="alert">{error}</div>}
+            {/* HANYA bagian ini yang akan berwarna merah sesuai image_b020fd.jpg */}
+            {error && <div className="alert alert-login-error">{error}</div>}
+
             <button className="btn btn-primary" type="submit" disabled={loading}>
               {loading ? 'Memproses...' : 'MASUK'}
             </button>
