@@ -409,10 +409,12 @@ select {
   padding-right: 48px;
 }
 
+/* KODE BARU */
 input:focus,
 select:focus {
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 6px rgba(79, 70, 229, 0.12);
+  outline: none !important;      /* Menghilangkan garis hitam utama */
+  box-shadow: none !important;   /* Menghilangkan bayangan biru di pinggir */
+  border-color: #4f46e5;         /* Tetap biarkan garis tepi berubah warna agar user tahu kolom sedang aktif */
   background: #ffffff;
 }
 
@@ -651,6 +653,7 @@ body.dark-theme {
     linear-gradient(180deg, var(--bg) 0%, #020617 100%);
 }
 
+/* Cari sekitar baris 466-470 */
 body.dark-theme .page-card,
 body.dark-theme .auth-card,
 body.dark-theme .panel,
@@ -659,6 +662,7 @@ body.dark-theme .input-group input,
 body.dark-theme .input-group select {
   background: var(--surface);
   color: var(--secondary);
+  outline: none !important; /* Tambahkan ini */
 }
 
 body.dark-theme .page-header p,
