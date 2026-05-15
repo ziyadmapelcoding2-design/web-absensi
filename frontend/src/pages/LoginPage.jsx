@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { login } from '../api.js';
 import ThemeToggle from '../components/ThemeToggle.jsx';
 
@@ -33,18 +33,24 @@ function LoginPage({ onLogin, theme, onThemeToggle }) {
             <h1 className="auth-title">ABSENSI</h1>
             {onThemeToggle && <ThemeToggle theme={theme} onToggle={onThemeToggle} />}
           </div>
-          <p className="auth-subtitle">Sistem absensi sekolah yang dirancang untuk mempermudah pengelolaan kehadiran guru dan murid.</p>
+          <p className="auth-subtitle">
+            Sistem absensi sekolah yang dirancang untuk mempermudah pengelolaan kehadiran guru dan murid.
+          </p>
         </div>
 
         <div className="auth-body">
-          <form className="auth-form" onSubmit={handleSubmit}>
+          {/* Menambahkan autoComplete="off" pada form sebagai pertahanan pertama */}
+          <form className="auth-form" onSubmit={handleSubmit} autoComplete="off">
+            
             <div className="input-group">
               <label htmlFor="email">Email Sekolah</label>
               <input
                 id="email"
                 type="email"
+                name="email_absensi_new" // Menggunakan nama yang unik agar tidak dikenali browser sebagai form login lama
                 placeholder="nama@sekolah.local"
                 value={email}
+                autoComplete="off" // Mematikan saran email
                 onChange={(e) => {
                   setEmail(e.target.value);
                   if (error) setError('');
@@ -58,6 +64,9 @@ function LoginPage({ onLogin, theme, onThemeToggle }) {
               <div className="password-wrapper">
                 <input
                   id="password"
+                  name="password_absensi_new"
+                  // 'new-password' adalah cara paling ampuh memaksa browser mengosongkan field password
+                  autoComplete="new-password" 
                   type={showPassword ? 'text' : 'password'}
                   placeholder="••••••••"
                   value={password}
@@ -79,7 +88,6 @@ function LoginPage({ onLogin, theme, onThemeToggle }) {
               </div>
             </div>
 
-            {/* HANYA bagian ini yang akan berwarna merah sesuai image_b020fd.jpg */}
             {error && <div className="alert alert-login-error">{error}</div>}
 
             <button className="btn btn-primary" type="submit" disabled={loading}>

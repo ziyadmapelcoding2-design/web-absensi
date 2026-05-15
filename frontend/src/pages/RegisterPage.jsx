@@ -4,47 +4,26 @@ import { register } from '../api.js';
 import ThemeToggle from '../components/ThemeToggle.jsx';
 
 function RegisterPage({ onLogin, theme, onThemeToggle }) {
-  const [name, setName] = useState('');
+  const [nama, setNama] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState('siswa');
   const [showPassword, setShowPassword] = useState(false);
-  const [role, setRole] = useState('student');
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-  // State khusus untuk Accordion Peran
-  const [isOpen, setIsOpen] = useState(false);
-  const roles = [
-    { id: 'admin', label: 'Admin' },
-    { id: 'teacher', label: 'Guru' },
-    { id: 'student', label: 'Siswa' }
-  ];
-
-  const getCurrentLabel = () => {
-    const found = roles.find(r => r.id === role);
-    return found ? found.label : 'Pilih Peran';
-  };
 
   async function handleSubmit(event) {
     event.preventDefault();
     setError('');
-    setSuccess('');
     setLoading(true);
 
     try {
-      const response = await register({ name, email, password, role });
-      if (response && response.token) {
-        if (onLogin) onLogin(response.user, response.token);
-        setSuccess('Registrasi berhasil! Mengalihkan...');
-        setTimeout(() => navigate(`/${response.user.role}`), 500);
-      } else {
-        setSuccess('Akun berhasil dibuat. Silakan masuk.');
-        setTimeout(() => navigate('/'), 1200);
-      }
+      const response = await register({ nama, email, password, role });
+      onLogin(response.user, response.token);
+      navigate('/');
     } catch (err) {
-      setError(err.message || 'Terjadi kesalahan saat mendaftar');
+      setError(err.message || 'Gagal melakukan pendaftaran');
     } finally {
       setLoading(false);
     }
@@ -58,19 +37,24 @@ function RegisterPage({ onLogin, theme, onThemeToggle }) {
             <h1 className="auth-title">PENDAFTARAN</h1>
             {onThemeToggle && <ThemeToggle theme={theme} onToggle={onThemeToggle} />}
           </div>
-          <p className="auth-subtitle">Buat akun terlebih dahulu sebelum memasuki sistem absensi sekolah.</p>
+          <p className="auth-subtitle">
+            Buat akun terlebih dahulu sebelum memasuki sistem absensi sekolah.
+          </p>
         </div>
 
         <div className="auth-body">
-          <form className="auth-form" onSubmit={handleSubmit}>
+          <form className="auth-form" onSubmit={handleSubmit} autoComplete="off">
+            
             <div className="input-group">
-              <label htmlFor="name">Nama Lengkap</label>
+              <label htmlFor="nama">Nama Lengkap</label>
               <input
-                id="name"
+                id="nama"
                 type="text"
+                name="full_name_absensi"
                 placeholder="Nama lengkap"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={nama}
+                autoComplete="off"
+                onChange={(e) => setNama(e.target.value)}
                 required
               />
             </div>
@@ -80,9 +64,14 @@ function RegisterPage({ onLogin, theme, onThemeToggle }) {
               <input
                 id="email"
                 type="email"
-                placeholder="name@school.local"
+                name="new_user_email"
+                placeholder="nama@sekolah.id"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="off"
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (error) setError('');
+                }}
                 required
               />
             </div>
@@ -92,10 +81,17 @@ function RegisterPage({ onLogin, theme, onThemeToggle }) {
               <div className="password-wrapper">
                 <input
                   id="password"
+                  name="new_user_password"
+                  // 'new-password' sangat krusial di halaman registrasi agar browser tidak 
+                  // memasukkan password akun lain yang tersimpan di localhost
+                  autoComplete="new-password"
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="••••••••"
+                  placeholder="••••••"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (error) setError('');
+                  }}
                   required
                 />
                 <button
@@ -103,67 +99,40 @@ function RegisterPage({ onLogin, theme, onThemeToggle }) {
                   className="password-toggle"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  <span className="material-symbols-outlined">{showPassword ? 'visibility_off' : 'visibility'}</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Peran Pengguna dengan tampilan kotak identik */}
-            <div className="input-group">
-              <label>Peran Pengguna</label>
-              <div className="accordion-role">
-                <button
-                  type="button"
-                  className="role-trigger"
-                  onClick={() => setIsOpen(!isOpen)}
-                >
-                  <span>{getCurrentLabel()}</span>
-                  <span className={`material-symbols-outlined transition-transform ${isOpen ? 'rotate-180' : ''}`}>
-                    expand_more
+                  <span className="material-symbols-outlined">
+                    {showPassword ? 'visibility_off' : 'visibility'}
                   </span>
                 </button>
-
-                {isOpen && (
-                  <div className="role-dropdown">
-                    {roles.map((r) => (
-                      <div
-                        key={r.id}
-                        className={`role-option ${role === r.id ? 'selected' : ''}`}
-                        onClick={() => { 
-                          setRole(r.id); 
-                          setIsOpen(false); 
-                        }}
-                      >
-                        {r.label}
-                      </div>
-                    ))}
-                  </div>
-                )}
               </div>
             </div>
 
-            {error && <div className="alert">{error}</div>}
-            {success && <div className="alert success">{success}</div>}
+            <div className="input-group">
+              <label htmlFor="role">Peran Pengguna</label>
+              <select 
+                id="role" 
+                value={role} 
+                onChange={(e) => setRole(e.target.value)}
+                className="auth-select"
+              >
+                <option value="siswa">Siswa</option>
+                <option value="guru">Guru</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+
+            {error && <div className="alert alert-login-error">{error}</div>}
 
             <button className="btn btn-primary" type="submit" disabled={loading}>
-              {loading ? 'Membuat akun...' : 'Daftar Sekarang'}
+              {loading ? 'Memproses...' : 'Daftar Sekarang'}
             </button>
           </form>
 
           <div className="auth-footer">
             <span>Sudah punya akun?</span>
-            <Link className="auth-link" to="/">Masuk</Link>
+            <Link className="auth-link" to="/login">Masuk</Link>
           </div>
         </div>
       </section>
-      
-      {/* Overlay transparan untuk menutup accordion saat klik di luar */}
-      {isOpen && (
-        <div 
-          style={{ position: 'fixed', inset: 0, zIndex: 5 }} 
-          onClick={() => setIsOpen(false)}
-        ></div>
-      )}
     </main>
   );
 }
