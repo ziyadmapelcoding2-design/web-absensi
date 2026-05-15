@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { register } from '../api.js';
 import ThemeToggle from '../components/ThemeToggle.jsx';
@@ -7,14 +7,35 @@ function RegisterPage({ onLogin, theme, onThemeToggle }) {
   const [nama, setNama] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('siswa');
+  // State role dikosongkan agar placeholder "Pilih peran anda" muncul di awal
+  const [role, setRole] = useState('');
+  const [isRoleOpen, setIsRoleOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const roleRef = useRef(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (roleRef.current && !roleRef.current.contains(event.target)) {
+        setIsRoleOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   async function handleSubmit(event) {
     event.preventDefault();
+    
+    // Validasi tambahan untuk memastikan peran sudah dipilih
+    if (!role) {
+      setError('Silakan pilih peran pengguna terlebih dahulu');
+      return;
+    }
+
     setError('');
     setLoading(true);
 
@@ -54,6 +75,7 @@ function RegisterPage({ onLogin, theme, onThemeToggle }) {
                 placeholder="Nama lengkap"
                 value={nama}
                 autoComplete="off"
+                className="focus:outline-none"
                 onChange={(e) => setNama(e.target.value)}
                 required
               />
@@ -68,6 +90,7 @@ function RegisterPage({ onLogin, theme, onThemeToggle }) {
                 placeholder="nama@sekolah.id"
                 value={email}
                 autoComplete="off"
+                className="focus:outline-none"
                 onChange={(e) => {
                   setEmail(e.target.value);
                   if (error) setError('');
@@ -82,12 +105,11 @@ function RegisterPage({ onLogin, theme, onThemeToggle }) {
                 <input
                   id="password"
                   name="new_user_password"
-                  // 'new-password' sangat krusial di halaman registrasi agar browser tidak 
-                  // memasukkan password akun lain yang tersimpan di localhost
                   autoComplete="new-password"
                   type={showPassword ? 'text' : 'password'}
                   placeholder="••••••"
                   value={password}
+                  className="focus:outline-none"
                   onChange={(e) => {
                     setPassword(e.target.value);
                     if (error) setError('');
@@ -112,8 +134,11 @@ function RegisterPage({ onLogin, theme, onThemeToggle }) {
                 id="role" 
                 value={role} 
                 onChange={(e) => setRole(e.target.value)}
-                className="auth-select"
+                className="auth-select focus:outline-none"
+                required
               >
+                {/* Opsi default sebagai placeholder */}
+                <option value="" disabled hidden>Pilih peran</option>
                 <option value="siswa">Siswa</option>
                 <option value="guru">Guru</option>
                 <option value="admin">Admin</option>
