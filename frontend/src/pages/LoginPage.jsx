@@ -10,6 +10,10 @@ function LoginPage({ onLogin, theme, onThemeToggle }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  function clearError() {
+    if (error) setError('');
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
     setError('');
@@ -39,21 +43,19 @@ function LoginPage({ onLogin, theme, onThemeToggle }) {
         </div>
 
         <div className="auth-body">
-          {/* Menambahkan autoComplete="off" pada form sebagai pertahanan pertama */}
-          <form className="auth-form" onSubmit={handleSubmit} autoComplete="off">
-            
+          <form className="auth-form" onSubmit={handleSubmit} autoComplete="on">
             <div className="input-group">
               <label htmlFor="email">Email Sekolah</label>
               <input
                 id="email"
                 type="email"
-                name="email_absensi_new" // Menggunakan nama yang unik agar tidak dikenali browser sebagai form login lama
+                name="email_absensi"
                 placeholder="nama@sekolah.local"
                 value={email}
-                autoComplete="off" // Mematikan saran email
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  if (error) setError('');
+                autoComplete="username"
+                onChange={(event) => {
+                  setEmail(event.target.value);
+                  clearError();
                 }}
                 required
               />
@@ -64,22 +66,22 @@ function LoginPage({ onLogin, theme, onThemeToggle }) {
               <div className="password-wrapper">
                 <input
                   id="password"
-                  name="password_absensi_new"
-                  // 'new-password' adalah cara paling ampuh memaksa browser mengosongkan field password
-                  autoComplete="new-password" 
+                  name="password_absensi"
+                  autoComplete="current-password"
                   type={showPassword ? 'text' : 'password'}
                   placeholder="••••••••"
                   value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    if (error) setError('');
+                  onChange={(event) => {
+                    setPassword(event.target.value);
+                    clearError();
                   }}
                   required
                 />
                 <button
                   type="button"
                   className="password-toggle"
-                  onClick={() => setShowPassword(!showPassword)}
+                  onClick={() => setShowPassword((current) => !current)}
+                  aria-label={showPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
                 >
                   <span className="material-symbols-outlined">
                     {showPassword ? 'visibility_off' : 'visibility'}

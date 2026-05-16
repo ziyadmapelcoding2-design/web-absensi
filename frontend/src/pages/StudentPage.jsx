@@ -12,26 +12,32 @@ function StudentPage({ user, onLogout, theme, onThemeToggle }) {
 
   useEffect(() => {
     async function loadData() {
-      const dashboard = await getDashboardStats('student', user.name);
-      setStats(dashboard);
-      const sessionResult = await getSessions('student');
-      setSessions(sessionResult.sessions);
-      if (sessionResult.sessions.length > 0) {
-        setSelectedSession(sessionResult.sessions[0].id.toString());
+      try {
+        const dashboard = await getDashboardStats('student', user.name);
+        setStats(dashboard);
+        const sessionResult = await getSessions('student');
+        setSessions(sessionResult.sessions);
+        if (sessionResult.sessions.length > 0) {
+          setSelectedSession(sessionResult.sessions[0].id.toString());
+        }
+        const recordResult = await getRecords(user.name);
+        setRecords(recordResult.records);
+      } catch (err) {
+        setMessage(err.message || 'Gagal memuat data siswa');
       }
-      const recordResult = await getRecords(user.name);
-      setRecords(recordResult.records);
     }
     loadData();
 
-    // Auto-refresh sessions every 30 seconds to show newly created sessions
     const interval = setInterval(async () => {
       try {
         const sessionResult = await getSessions('student');
         setSessions(sessionResult.sessions);
-        if (sessionResult.sessions.length > 0 && !sessionResult.sessions.find(s => s.id.toString() === selectedSession)) {
-          setSelectedSession(sessionResult.sessions[0].id.toString());
-        }
+        setSelectedSession((currentSession) => {
+          const sessionStillAvailable = sessionResult.sessions.some((session) => session.id.toString() === currentSession);
+          return sessionStillAvailable || sessionResult.sessions.length === 0
+            ? currentSession
+            : sessionResult.sessions[0].id.toString();
+        });
       } catch (err) {
         console.error('Failed to refresh sessions:', err);
       }

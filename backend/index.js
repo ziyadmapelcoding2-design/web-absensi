@@ -1,6 +1,23 @@
 const express = require('express');
 const cors = require('cors');
-const { init, getUserByEmailAndPassword, getUserByEmail, getAdminStats, getTeacherStats, getStudentStats, getClasses, createSession, getSessions, submitAttendance, getAttendanceRecords, getAttendanceRecordsByStudent, createUser, deleteUser, getAllUsers } = require('./db');
+const {
+  init,
+  getUserByEmailAndPassword,
+  getUserByEmail,
+  getAdminStats,
+  getTeacherStats,
+  getStudentStats,
+  getClasses,
+  createSession,
+  getSessions,
+  getActiveSessions,
+  submitAttendance,
+  getAttendanceRecords,
+  getAttendanceRecordsByStudent,
+  createUser,
+  deleteUser,
+  getAllUsers
+} = require('./db');
 const jwt = require('jsonwebtoken');
 
 const app = express();
@@ -124,14 +141,7 @@ app.get('/api/profile', async (req, res) => {
 app.get('/api/sessions', async (req, res) => {
   try {
     const { role } = req.query;
-    let sessions;
-    if (role === 'student') {
-      // Students only see active sessions
-      sessions = await all('SELECT * FROM sessions WHERE isActive = 1 ORDER BY date DESC');
-    } else {
-      // Teachers and admins see all sessions
-      sessions = await getSessions();
-    }
+    const sessions = role === 'student' ? await getActiveSessions() : await getSessions();
     return res.json({ sessions });
   } catch (err) {
     return res.status(500).json({ message: err.message });

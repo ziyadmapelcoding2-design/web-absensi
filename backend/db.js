@@ -1,11 +1,9 @@
-const fs = require('fs');
 const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
 const bcrypt = require('bcryptjs');
 
 const SALT_ROUNDS = 10;
 const dbFile = path.join(__dirname, 'data.db');
-const exists = fs.existsSync(dbFile);
 const db = new sqlite3.Database(dbFile);
 
 function run(sql, params = []) {
@@ -108,9 +106,6 @@ async function init() {
     `);
   }
 
-  // Clear attendance records for testing
-  await run('DELETE FROM attendance_records');
-
   const recordCount = await get('SELECT COUNT(*) as count FROM attendance_records');
   if (recordCount.count === 0) {
     await run(`INSERT INTO attendance_records (sessionId, studentName, studentId, status, time) VALUES
@@ -188,6 +183,10 @@ async function getSessions() {
   return all('SELECT * FROM sessions ORDER BY date DESC');
 }
 
+async function getActiveSessions() {
+  return all('SELECT * FROM sessions WHERE isActive = 1 ORDER BY date DESC');
+}
+
 async function submitAttendance({ sessionId, studentName, studentId, status }) {
   const time = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
   const createdAt = new Date().toISOString();
@@ -221,6 +220,7 @@ module.exports = {
   getClasses,
   createSession,
   getSessions,
+  getActiveSessions,
   submitAttendance,
   getAttendanceRecords,
   getAttendanceRecordsByStudent,

@@ -1,36 +1,24 @@
-import { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { register } from '../api.js';
 import ThemeToggle from '../components/ThemeToggle.jsx';
 
 function RegisterPage({ onLogin, theme, onThemeToggle }) {
-  const [nama, setNama] = useState('');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  // State role dikosongkan agar placeholder "Pilih peran anda" muncul di awal
   const [role, setRole] = useState('');
-  const [isRoleOpen, setIsRoleOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const roleRef = useRef(null);
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (roleRef.current && !roleRef.current.contains(event.target)) {
-        setIsRoleOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  function clearError() {
+    if (error) setError('');
+  }
 
   async function handleSubmit(event) {
     event.preventDefault();
-    
-    // Validasi tambahan untuk memastikan peran sudah dipilih
+
     if (!role) {
       setError('Silakan pilih peran pengguna terlebih dahulu');
       return;
@@ -40,9 +28,8 @@ function RegisterPage({ onLogin, theme, onThemeToggle }) {
     setLoading(true);
 
     try {
-      const response = await register({ nama, email, password, role });
+      const response = await register({ name, email, password, role });
       onLogin(response.user, response.token);
-      navigate('/');
     } catch (err) {
       setError(err.message || 'Gagal melakukan pendaftaran');
     } finally {
@@ -65,18 +52,20 @@ function RegisterPage({ onLogin, theme, onThemeToggle }) {
 
         <div className="auth-body">
           <form className="auth-form" onSubmit={handleSubmit} autoComplete="off">
-            
             <div className="input-group">
-              <label htmlFor="nama">Nama Lengkap</label>
+              <label htmlFor="name">Nama Lengkap</label>
               <input
-                id="nama"
+                id="name"
                 type="text"
                 name="full_name_absensi"
                 placeholder="Nama lengkap"
-                value={nama}
-                autoComplete="off"
+                value={name}
+                autoComplete="name"
                 className="focus:outline-none"
-                onChange={(e) => setNama(e.target.value)}
+                onChange={(event) => {
+                  setName(event.target.value);
+                  clearError();
+                }}
                 required
               />
             </div>
@@ -89,11 +78,11 @@ function RegisterPage({ onLogin, theme, onThemeToggle }) {
                 name="new_user_email"
                 placeholder="nama@sekolah.id"
                 value={email}
-                autoComplete="off"
+                autoComplete="email"
                 className="focus:outline-none"
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  if (error) setError('');
+                onChange={(event) => {
+                  setEmail(event.target.value);
+                  clearError();
                 }}
                 required
               />
@@ -110,16 +99,17 @@ function RegisterPage({ onLogin, theme, onThemeToggle }) {
                   placeholder="••••••"
                   value={password}
                   className="focus:outline-none"
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    if (error) setError('');
+                  onChange={(event) => {
+                    setPassword(event.target.value);
+                    clearError();
                   }}
                   required
                 />
                 <button
                   type="button"
                   className="password-toggle"
-                  onClick={() => setShowPassword(!showPassword)}
+                  onClick={() => setShowPassword((current) => !current)}
+                  aria-label={showPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
                 >
                   <span className="material-symbols-outlined">
                     {showPassword ? 'visibility_off' : 'visibility'}
@@ -130,17 +120,19 @@ function RegisterPage({ onLogin, theme, onThemeToggle }) {
 
             <div className="input-group">
               <label htmlFor="role">Peran Pengguna</label>
-              <select 
-                id="role" 
-                value={role} 
-                onChange={(e) => setRole(e.target.value)}
+              <select
+                id="role"
+                value={role}
+                onChange={(event) => {
+                  setRole(event.target.value);
+                  clearError();
+                }}
                 className="auth-select focus:outline-none"
                 required
               >
-                {/* Opsi default sebagai placeholder */}
                 <option value="" disabled hidden>Pilih peran</option>
-                <option value="siswa">Siswa</option>
-                <option value="guru">Guru</option>
+                <option value="student">Siswa</option>
+                <option value="teacher">Guru</option>
                 <option value="admin">Admin</option>
               </select>
             </div>
@@ -154,7 +146,7 @@ function RegisterPage({ onLogin, theme, onThemeToggle }) {
 
           <div className="auth-footer">
             <span>Sudah punya akun?</span>
-            <Link className="auth-link" to="/login">Masuk</Link>
+            <Link className="auth-link" to="/">Masuk</Link>
           </div>
         </div>
       </section>
