@@ -119,22 +119,28 @@ function RegisterPage({ onLogin, theme, onThemeToggle }) {
             </div>
 
             <div className="input-group">
-              <label htmlFor="role">Peran Pengguna</label>
-              <select
-                id="role"
-                value={role}
-                onChange={(event) => {
-                  setRole(event.target.value);
-                  clearError();
-                }}
-                className="auth-select focus:outline-none"
-                required
-              >
-                <option value="" disabled hidden>Pilih peran</option>
-                <option value="student">Siswa</option>
-                <option value="teacher">Guru</option>
-                <option value="admin">Admin</option>
-              </select>
+              <label>Peran Pengguna</label>
+              <div className="role-pill-group" role="radiogroup" aria-label="Peran Pengguna">
+                {[
+                  { value: 'student', label: 'Siswa' },
+                  { value: 'teacher', label: 'Guru' },
+                  { value: 'admin', label: 'Admin' },
+                ].map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    role="radio"
+                    aria-checked={role === option.value}
+                    className={`role-pill ${role === option.value ? 'selected' : ''}`}
+                    onClick={() => {
+                      setRole(option.value);
+                      clearError();
+                    }}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {error && <div className="alert alert-login-error">{error}</div>}

@@ -324,12 +324,27 @@ select {
   width: 100%;
   min-height: 56px;
   line-height: 1.3;
+  box-sizing: border-box;
   border: 2px solid var(--border);
-  border-radius: 16px;
+  border-radius: 24px;
   padding: 16px 18px;
-  background: #f8f9ff;
+  background: #f3f4ff;
   transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  font-size: 1rem;
 }
+
+input:hover,
+select:hover {
+  border-color: rgba(79, 70, 229, 0.35);
+  background: #ffffff;
+}
+
+.auth-select {
+  border-radius: 24px;
+  background: linear-gradient(180deg, #ffffff 0%, #eef2ff 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
 /* Tambahkan mulai dari baris 333 */
 .accordion-role {
   position: relative;
@@ -403,23 +418,149 @@ select {
   -moz-appearance: none;
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg width='16' height='12' viewBox='0 0 16 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 4l6 6 6-6' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-position: right 22px center;
+  background-position: right 18px center;
   background-repeat: no-repeat;
-  background-size: 16px 16px;
+  background-size: 18px 14px;
   padding-right: 48px;
 }
 
-/* KODE BARU */
+select:hover {
+  border-color: rgba(79, 70, 229, 0.35);
+  box-shadow: 0 8px 18px rgba(79, 70, 229, 0.08);
+}
+
+select:focus {
+  border-color: var(--primary);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+}
+
+.role-pill-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.role-pill {
+  flex: 1 1 calc(33% - 10px);
+  min-width: 100px;
+  border: 2px solid var(--border);
+  border-radius: 9999px;
+  background: #f8f9ff;
+  color: var(--secondary);
+  padding: 14px 18px;
+  font-size: 0.98rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.role-pill:hover {
+  border-color: rgba(79, 70, 229, 0.45);
+  background: #eef2ff;
+  transform: translateY(-1px);
+}
+
+.role-pill.selected {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #ffffff;
+  box-shadow: 0 14px 30px rgba(79, 70, 229, 0.18);
+}
+
+.role-pill:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.18);
+}
+
+/* Make placeholder option transparent like other inputs */
+select option[value=""] {
+  color: rgba(100, 116, 139, 0.35);
+}
+
+/* When select has empty value - make text transparent */
+select:not([value=""]):invalid {
+  color: rgba(100, 116, 139, 0.45);
+}
+
+/* Arrow animation on hover - rotate and scale with smooth transition */
+@keyframes arrowBounce {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translateY(2px) rotate(180deg) scale(1.15);
+  }
+}
+
+select:hover {
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='12' viewBox='0 0 16 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 4l6 6 6-6' fill='none' stroke='%234f46e5' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-size: 22px 18px;
+  background-position: right 16px center;
+  background-repeat: no-repeat;
+  animation: arrowBounce 0.6s ease-in-out;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+/* Smooth focus state */
+select:focus {
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='12' viewBox='0 0 16 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 4l6 6 6-6' fill='none' stroke='%234f46e5' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-size: 20px 16px;
+  background-position: right 16px center;
+  background-repeat: no-repeat;
+  border-color: var(--primary);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+/* INPUT & SELECT STYLING */
 input:focus,
 select:focus {
-  outline: none !important;      /* Menghilangkan garis hitam utama */
-  box-shadow: none !important;   /* Menghilangkan bayangan biru di pinggir */
-  border-color: #4f46e5;         /* Tetap biarkan garis tepi berubah warna agar user tahu kolom sedang aktif */
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+  border-color: var(--primary);
   background: #ffffff;
+  transform: translateY(-1px);
 }
 
 input::placeholder {
-  opacity: 0.7;
+  opacity: 0.45;
+  color: #cbd5e1;
+}
+
+/* Select disabled/placeholder text styling */
+select {
+  color: var(--secondary);
+}
+
+/* Improve select option styling */
+select option {
+  background: #ffffff;
+  color: var(--secondary);
+  padding: 12px 18px;
+}
+
+select option:hover {
+  background: var(--primary-soft);
+}
+
+select option:checked {
+  background: linear-gradient(#4f46e5, #4f46e5);
+  color: #ffffff;
+}
+
+/* Dark theme adjustments */
+body.dark-theme input::placeholder {
+  opacity: 0.4;
+  color: #64748b;
+}
+
+body.dark-theme input:focus,
+body.dark-theme select:focus {
+  box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.12);
+  border-color: var(--primary);
 }
 
 .btn {
@@ -658,11 +799,39 @@ body.dark-theme .page-card,
 body.dark-theme .auth-card,
 body.dark-theme .panel,
 body.dark-theme .theme-toggle,
+body.dark-theme .auth-card {
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+}
+
 body.dark-theme .input-group input,
-body.dark-theme .input-group select {
-  background: var(--surface);
-  color: var(--secondary);
-  outline: none !important; /* Tambahkan ini */
+body.dark-theme .input-group select,
+body.dark-theme .role-pill {
+  background: rgba(148, 163, 184, 0.08);
+  color: #e2e8f0;
+  border-color: rgba(148, 163, 184, 0.24);
+}
+
+body.dark-theme .role-pill:hover {
+  background: rgba(99, 102, 241, 0.14);
+  border-color: #818cf8;
+}
+
+body.dark-theme .role-pill.selected {
+  background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%);
+  border-color: #8b5cf6;
+  color: #ffffff;
+  box-shadow: 0 18px 36px rgba(99, 102, 241, 0.22);
+}
+
+body.dark-theme select {
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='12' viewBox='0 0 16 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 4l6 6 6-6' fill='none' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+body.dark-theme select:hover,
+body.dark-theme select:focus {
+  border-color: #818cf8;
+  background-color: rgba(30, 41, 59, 0.9);
 }
 
 body.dark-theme .page-header p,
