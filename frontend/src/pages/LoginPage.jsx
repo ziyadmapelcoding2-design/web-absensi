@@ -17,7 +17,7 @@ function LoginPage({ onLogin, theme, onThemeToggle }) {
   async function handleSubmit(event) {
     event.preventDefault();
     setError('');
-    setLoading(true);
+    loading(true);
 
     try {
       const response = await login({ email, password });
@@ -84,7 +84,8 @@ function LoginPage({ onLogin, theme, onThemeToggle }) {
                   aria-label={showPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
                 >
                   <span className="material-symbols-outlined">
-                    {showPassword ? 'visibility_off' : 'visibility'}
+                    {/* Logika dibalik sesuai request kamu */}
+                    {showPassword ? 'visibility' : 'visibility_off'}
                   </span>
                 </button>
               </div>
