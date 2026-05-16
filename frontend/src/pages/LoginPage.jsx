@@ -17,7 +17,7 @@ function LoginPage({ onLogin, theme, onThemeToggle }) {
   async function handleSubmit(event) {
     event.preventDefault();
     setError('');
-    loading(true);
+    setLoading(true); // PERBAIKAN: Sebelumnya 'loading(true)', diubah jadi 'setLoading(true)'
 
     try {
       const response = await login({ email, password });
@@ -43,7 +43,8 @@ function LoginPage({ onLogin, theme, onThemeToggle }) {
         </div>
 
         <div className="auth-body">
-          <form className="auth-form" onSubmit={handleSubmit} autoComplete="on">
+          {/* PERBAIKAN: Ubah autoComplete form menjadi "off" */}
+          <form className="auth-form" onSubmit={handleSubmit} autoComplete="off">
             <div className="input-group">
               <label htmlFor="email">Email Sekolah</label>
               <input
@@ -52,7 +53,8 @@ function LoginPage({ onLogin, theme, onThemeToggle }) {
                 name="email_absensi"
                 placeholder="nama@sekolah.local"
                 value={email}
-                autoComplete="username"
+                /* PERBAIKAN: Ubah menjadi "off" atau "one-time-code" agar tidak auto-fill */
+                autoComplete="off"
                 onChange={(event) => {
                   setEmail(event.target.value);
                   clearError();
@@ -67,7 +69,8 @@ function LoginPage({ onLogin, theme, onThemeToggle }) {
                 <input
                   id="password"
                   name="password_absensi"
-                  autoComplete="current-password"
+                  /* PERBAIKAN: Menggunakan "new-password" ampuh untuk mematikan auto-fill password browser modern */
+                  autoComplete="new-password"
                   type={showPassword ? 'text' : 'password'}
                   placeholder="••••••••"
                   value={password}
@@ -84,7 +87,6 @@ function LoginPage({ onLogin, theme, onThemeToggle }) {
                   aria-label={showPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
                 >
                   <span className="material-symbols-outlined">
-                    {/* Logika dibalik sesuai request kamu */}
                     {showPassword ? 'visibility' : 'visibility_off'}
                   </span>
                 </button>
