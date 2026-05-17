@@ -51,7 +51,7 @@ function LoginPage({ onLogin, theme, onThemeToggle }) {
                 id="email"
                 type="email"
                 name="email_absensi"
-                placeholder="nama@sekolah.local"
+                placeholder="nama@sekolah.co.id"
                 value={email}
                 /* PERBAIKAN: Ubah menjadi "off" atau "one-time-code" agar tidak auto-fill */
                 autoComplete="off"
