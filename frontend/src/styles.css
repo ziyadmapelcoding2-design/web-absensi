@@ -443,7 +443,7 @@ select:focus {
 }
 
 .role-pill {
-  flex: 1 1 calc(33% - 10px);
+flex: 1 1 calc(33% - 10px);
   min-width: 100px;
   border: 2px solid var(--border);
   border-radius: 9999px;
@@ -455,7 +455,6 @@ select:focus {
   cursor: pointer;
   transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
-
 .role-pill:hover {
   border-color: rgba(79, 70, 229, 0.45);
   background: #eef2ff;
@@ -468,7 +467,6 @@ select:focus {
   color: #ffffff;
   box-shadow: 0 14px 30px rgba(79, 70, 229, 0.18);
 }
-
 .role-pill:focus-visible {
   outline: none;
   box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.18);
@@ -515,7 +513,6 @@ select:focus {
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
 }
 
-/* INPUT & SELECT STYLING */
 input:focus,
 select:focus {
   outline: none !important;
@@ -525,9 +522,16 @@ select:focus {
   transform: translateY(-1px);
 }
 
-input::placeholder {
-  opacity: 0.45;
-  color: #cbd5e1;
+input::placeholder,
+textarea::placeholder {
+    color: #64748b;        /* Abu sedang - cukup terlihat */
+    opacity: 0.85 !important;
+    font-weight: 400;
+}
+
+input:focus::placeholder {
+    color: #475569;        /* Sedikit lebih gelap saat fokus */
+    opacity: 0.75 !important;
 }
 
 /* Select disabled/placeholder text styling */
@@ -551,16 +555,19 @@ select option:checked {
   color: #ffffff;
 }
 
-/* Dark theme adjustments */
 body.dark-theme input::placeholder {
-  opacity: 0.4;
-  color: #64748b;
+    color: #94a3b8;
+    opacity: 0.85 !important;
 }
-
 body.dark-theme input:focus,
 body.dark-theme select:focus {
   box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.12);
   border-color: var(--primary);
+}
+
+body.dark-theme input:focus::placeholder {
+    color: #cbd5e1;
+    opacity: 0.75 !important;
 }
 
 .btn {
