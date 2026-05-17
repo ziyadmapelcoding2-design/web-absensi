@@ -76,7 +76,7 @@ function RegisterPage({ onLogin, theme, onThemeToggle }) {
                 id="email"
                 type="email"
                 name="new_user_email"
-                placeholder="nama@sekolah.id"
+                placeholder="nama@school.id"
                 value={email}
                 autoComplete="email"
                 className="focus:outline-none"
