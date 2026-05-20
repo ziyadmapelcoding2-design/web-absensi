@@ -65,7 +65,7 @@ function TeacherPage({ user, onLogout, theme, onThemeToggle }) {
           <strong>{stats.activeSessions ?? '-'}</strong>
         </div>
         <div className="metric-card">
-          <span>Jumlah Siswa</span>
+          <span>Jumlah Murid</span>
           <strong>{stats.totalStudents ?? '-'}</strong>
         </div>
         <div className="metric-card">

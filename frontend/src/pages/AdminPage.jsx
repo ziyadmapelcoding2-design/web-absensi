@@ -45,7 +45,7 @@ function AdminPage({ user, onLogout, theme, onThemeToggle }) {
     <DashboardShell
       eyebrow="Admin Dashboard"
       title="Kelola Sistem Absensi Sekolah"
-      subtitle={`Halo, ${user.name}. Pantau pengguna, kelas, dan performa kehadiran dengan tampilan profesional.`}
+      subtitle={`Halo, ${user.name}. Pantau pengguna, kelas, dan performa kehadiran guru dan murid dengan mudah dari satu tempat.`}
       theme={theme}
       onThemeToggle={onThemeToggle}
       action={<button className="btn btn-secondary" onClick={onLogout}>Keluar</button>}

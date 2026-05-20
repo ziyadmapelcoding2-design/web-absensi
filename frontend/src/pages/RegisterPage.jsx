@@ -76,7 +76,7 @@ function RegisterPage({ onLogin, theme, onThemeToggle }) {
                 id="email"
                 type="email"
                 name="new_user_email"
-                placeholder="nama@school.id"
+                placeholder="nama@sch.id"
                 value={email}
                 autoComplete="email"
                 className="focus:outline-none"
@@ -123,7 +123,7 @@ function RegisterPage({ onLogin, theme, onThemeToggle }) {
               <label>Peran Pengguna</label>
               <div className="role-pill-group" role="radiogroup" aria-label="Peran Pengguna">
                 {[
-                  { value: 'student', label: 'Siswa' },
+                  { value: 'student', label: 'Murid' },
                   { value: 'teacher', label: 'Guru' },
                   { value: 'admin', label: 'Admin' },
                 ].map((option) => (

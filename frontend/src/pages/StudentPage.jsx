@@ -23,7 +23,7 @@ function StudentPage({ user, onLogout, theme, onThemeToggle }) {
         const recordResult = await getRecords(user.name);
         setRecords(recordResult.records);
       } catch (err) {
-        setMessage(err.message || 'Gagal memuat data siswa');
+        setMessage(err.message || 'Gagal memuat data murid');
       }
     }
     loadData();
@@ -73,7 +73,7 @@ function StudentPage({ user, onLogout, theme, onThemeToggle }) {
 
   return (
     <DashboardShell
-      eyebrow="Siswa Dashboard"
+      eyebrow="Murid Dashboard"
       title="Catat Kehadiran dengan Cepat"
       subtitle={`Halo, ${user.name}. Pilih sesi yang tersedia dan kirimkan kehadiran dengan antarmuka modern.`}
       theme={theme}
