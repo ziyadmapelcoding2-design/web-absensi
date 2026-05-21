@@ -56,23 +56,35 @@ function TeacherPage({ user, onLogout, theme, onThemeToggle }) {
       onThemeToggle={onThemeToggle}
       action={<button className="btn btn-secondary" onClick={onLogout}>Keluar</button>}
     >
-      {loading && <div className="alert success">Memuat data guru...</div>}
-      {message && <div className="alert">{message}</div>}
+      <div className="dashboard-hero">
+        <div>
+          <h2>Dashboard Guru Profesional</h2>
+          <p>Atur sesi, pantau murid, dan tampilkan jadwal dengan layout yang modern dan terstruktur.</p>
+        </div>
+        <div className="hero-badges">
+          <span className="hero-badge">Terjadwal</span>
+          <span className="hero-badge">Mudah</span>
+          <span className="hero-badge">Terpercaya</span>
+        </div>
+      </div>
 
-      <div className="stats-grid">
-        <div className="metric-card">
+      <div className="dashboard-highlights">
+        <div className="highlight-card">
           <span>Sesi Aktif</span>
           <strong>{stats.activeSessions ?? '-'}</strong>
         </div>
-        <div className="metric-card">
+        <div className="highlight-card">
           <span>Jumlah Murid</span>
           <strong>{stats.totalStudents ?? '-'}</strong>
         </div>
-        <div className="metric-card">
+        <div className="highlight-card">
           <span>Absensi Hari Ini</span>
           <strong>{stats.attendanceToday ?? '-'}</strong>
         </div>
       </div>
+
+      {loading && <div className="alert success">Memuat data guru...</div>}
+      {message && <div className="alert">{message}</div>}
 
       <section className="page-section">
         <div className="section-title">

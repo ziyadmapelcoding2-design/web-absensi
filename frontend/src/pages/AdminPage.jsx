@@ -50,23 +50,35 @@ function AdminPage({ user, onLogout, theme, onThemeToggle }) {
       onThemeToggle={onThemeToggle}
       action={<button className="btn btn-secondary" onClick={onLogout}>Keluar</button>}
     >
-      {error && <div className="alert">{error}</div>}
-      {loading && <div className="alert success">Memuat data dashboard...</div>}
+      <div className="dashboard-hero">
+        <div>
+          <h2>Panel Admin Modern</h2>
+          <p>Kelola semua pengguna, absensi, dan kelas dengan tampilan yang bersih dan mudah dibaca.</p>
+        </div>
+        <div className="hero-badges">
+          <span className="hero-badge">Realtime</span>
+          <span className="hero-badge">Aman</span>
+          <span className="hero-badge">Terintegrasi</span>
+        </div>
+      </div>
 
-      <div className="stats-grid">
-        <div className="metric-card">
+      <div className="dashboard-highlights">
+        <div className="highlight-card">
           <span>Total Pengguna</span>
           <strong>{stats.totalUsers ?? '-'}</strong>
         </div>
-        <div className="metric-card">
+        <div className="highlight-card">
           <span>Total Kelas</span>
           <strong>{stats.totalClasses ?? '-'}</strong>
         </div>
-        <div className="metric-card">
-          <span>Total Sesi Absensi</span>
+        <div className="highlight-card">
+          <span>Total Sesi</span>
           <strong>{stats.totalSessions ?? '-'}</strong>
         </div>
       </div>
+
+      {error && <div className="alert">{error}</div>}
+      {loading && <div className="alert success">Memuat data dashboard...</div>}
 
       <section className="page-section">
         <div className="section-title">

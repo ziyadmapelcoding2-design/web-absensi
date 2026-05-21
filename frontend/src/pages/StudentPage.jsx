@@ -80,14 +80,30 @@ function StudentPage({ user, onLogout, theme, onThemeToggle }) {
       onThemeToggle={onThemeToggle}
       action={<button className="btn btn-secondary" onClick={onLogout}>Keluar</button>}
     >
-      <div className="stats-grid">
-        <div className="metric-card">
+      <div className="dashboard-hero">
+        <div>
+          <h2>Absensi Digital Untuk Murid</h2>
+          <p>Isi kehadiran dalam satu layar sederhana, dengan sesi yang jelas dan status yang mudah dipantau.</p>
+        </div>
+        <div className="hero-badges">
+          <span className="hero-badge">Cepat</span>
+          <span className="hero-badge">Akurat</span>
+          <span className="hero-badge">Responsif</span>
+        </div>
+      </div>
+
+      <div className="dashboard-highlights">
+        <div className="highlight-card">
           <span>Sesi Tersedia</span>
           <strong>{sessions.length}</strong>
         </div>
-        <div className="metric-card">
+        <div className="highlight-card">
           <span>Riwayat Absensi</span>
           <strong>{records.length}</strong>
+        </div>
+        <div className="highlight-card">
+          <span>Status Saat Ini</span>
+          <strong>{status.charAt(0).toUpperCase() + status.slice(1)}</strong>
         </div>
       </div>
 
